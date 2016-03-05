@@ -25,3 +25,16 @@ ShoppingIFS.prototype.getCartInfo = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.addToCart = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.addToCartXML(obj);
+  Shopping.CartForAdd(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.CartForAddResult));
+    } catch (e) {
+      console.error('ShoppingIFS addToCart Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};

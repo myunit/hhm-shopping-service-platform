@@ -48,5 +48,44 @@ module.exports = function (Shopping) {
       }
     );
 
+    //将商品添加到购物车
+    Shopping.addToCart = function (data, cb) {
+      shoppingIFS.addToCart(data, function (err, res) {
+        if (err) {
+          console.log('addToCart err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('addToCart result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
+        } else {
+          cb(null, {status: 1, promotionAmount: res.PromotionAmount, msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'addToCart',
+      {
+        description: [
+          '将商品添加到购物车.返回结果-status:操作结果 0 失败 1 成功, promotionAmount:促销金额, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '将商品添加到购物车 {"userId":int, "product":[{"pId":int, "pItemId":int, "qty":int, "shoppingSource":"string"}],',
+              '"device":"string"}',
+              'pId:商品编号, pItemId商品sku编号, qty:数量, shoppingSource:组合商品字段(非组合商品时传空字符), device:设备识别码(限制购买时使用)'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/add-to-cart', verb: 'post'}
+      }
+    );
+
   });
 };
