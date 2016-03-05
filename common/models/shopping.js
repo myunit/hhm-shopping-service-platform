@@ -125,5 +125,43 @@ module.exports = function (Shopping) {
       }
     );
 
+    //删除购物车内商品
+    Shopping.deleteInCart = function (data, cb) {
+      shoppingIFS.deleteInCart(data, function (err, res) {
+        if (err) {
+          console.log('deleteInCart err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('deleteInCart result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
+        } else {
+          cb(null, {status: 1, promotionAmount: res.PromotionAmount, msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'deleteInCart',
+      {
+        description: [
+          '删除购物车内商品.返回结果-status:操作结果 0 失败 1 成功, promotionAmount:促销金额, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '删除购物车内商品 {"userId":int, "cartId":int}',
+              'cartId:购物车编号'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/delete-in-cart', verb: 'post'}
+      }
+    );
+
   });
 };

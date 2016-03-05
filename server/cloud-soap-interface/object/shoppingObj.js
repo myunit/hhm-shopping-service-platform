@@ -70,3 +70,23 @@ exports.modifyQtyInCartXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.deleteInCartXML = function (obj) {
+  var xmlObj = [{
+    CartForDelete: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        uId: obj.userId
+      },
+      {
+        sysNo: obj.cartId
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};

@@ -51,3 +51,16 @@ ShoppingIFS.prototype.modifyQtyInCart = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.deleteInCart = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.deleteInCartXML(obj);
+  Shopping.CartForDelete(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.CartForDeleteResult));
+    } catch (e) {
+      console.error('ShoppingIFS CartForDelete Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};
