@@ -87,5 +87,43 @@ module.exports = function (Shopping) {
       }
     );
 
+    //修改购物车内商品数量
+    Shopping.modifyQtyInCart = function (data, cb) {
+      shoppingIFS.modifyQtyInCart(data, function (err, res) {
+        if (err) {
+          console.log('modifyQtyInCart err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('modifyQtyInCart result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
+        } else {
+          cb(null, {status: 1, msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'modifyQtyInCart',
+      {
+        description: [
+          '修改购物车内商品数量.返回结果-status:操作结果 0 失败 1 成功, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '修改购物车内商品数量 {"userId":int, "cartId":int, "qty":int, "device":"string"}',
+              'cartId:购物车编号, qty:数量, device:设备识别码(限制购买时使用)'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/modify-qty-in-cart', verb: 'post'}
+      }
+    );
+
   });
 };

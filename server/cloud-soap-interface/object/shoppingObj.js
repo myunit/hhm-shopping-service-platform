@@ -44,3 +44,29 @@ exports.addToCartXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.modifyQtyInCartXML = function (obj) {
+  var xmlObj = [{
+    CartForModifyQty: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        uId: obj.userId
+      },
+      {
+        sysNo: obj.cartId
+      },
+      {
+        qty: obj.qty
+      },
+      {
+        devicename: obj.device
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};
