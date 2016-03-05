@@ -11,40 +11,40 @@ module.exports = function (Shopping) {
 
     var shoppingIFS = new ShoppingIFS(app);
 
-    //获取商品分类
-    Shopping.getCategory = function (data, cb) {
-      shoppingIFS.getCategory(data, function (err, res) {
+    //获取购物车信息
+    Shopping.getCartInfo = function (data, cb) {
+      shoppingIFS.getCartInfo(data, function (err, res) {
         if (err) {
-          console.log('getCategory err: ' + err);
+          console.log('getCartInfo err: ' + err);
           cb(null, {status: 0, msg: '操作异常'});
           return;
         }
 
         if (!res.IsSuccess) {
-          console.error('getCategory result err: ' + res.ErrorInfo);
-          cb(null, {status: 0, msg: res.ErrorInfo});
+          console.error('getCartInfo result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
         } else {
-          cb(null, {status: 1, category: JSON.parse(res.ResultStr), msg: ''});
+          cb(null, {status: 1, cart: res.Datas, msg: ''});
         }
       });
     };
 
     Shopping.remoteMethod(
-      'getCategory',
+      'getCartInfo',
       {
         description: [
-          '获取商品分类.返回结果-status:操作结果 0 失败 1 成功, category:分类信息, msg:附带信息'
+          '获取购物车信息.返回结果-status:操作结果 0 失败 1 成功, cart:购物车信息, msg:附带信息'
         ],
         accepts: [
           {
             arg: 'data', type: 'object', required: true, http: {source: 'body'},
             description: [
-              '获取商品分类 {"categoryId":int}'
+              '获取购物车信息 {"userId":int}'
             ]
           }
         ],
         returns: {arg: 'repData', type: 'string'},
-        http: {path: '/get-category', verb: 'post'}
+        http: {path: '/get-cart-info', verb: 'post'}
       }
     );
 

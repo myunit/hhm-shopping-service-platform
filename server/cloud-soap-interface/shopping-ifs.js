@@ -13,14 +13,14 @@ var ShoppingIFS = function (app) {
 util.inherits(ShoppingIFS, Object);
 exports = module.exports = ShoppingIFS;
 
-ShoppingIFS.prototype.getCategory = function (obj, callback) {
+ShoppingIFS.prototype.getCartInfo = function (obj, callback) {
   var Shopping = this.DS.models.Shopping;
-  var xml = shoppingObj.getCategoryXML(obj);
-  Shopping.GetCategoryTree(xml, function (err, response) {
+  var xml = shoppingObj.getCartInfoXML(obj);
+  Shopping.CartForGet(xml, function (err, response) {
     try {
-      callback(err, JSON.parse(response.GetCategoryTreeResult));
+      callback(err, JSON.parse(response.CartForGetResult));
     } catch (e) {
-      console.error('ProductIFS getCategory Exception: ' + e);
+      console.error('ShoppingIFS getCartInfo Exception: ' + e);
       callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
     }
   });
