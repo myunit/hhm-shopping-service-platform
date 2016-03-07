@@ -238,5 +238,43 @@ module.exports = function (Shopping) {
       }
     );
 
+    //检查购物车内是否存在秒杀商品
+    Shopping.isExistSecKillInCart = function (data, cb) {
+      shoppingIFS.isExistSecKillInCart(data, function (err, res) {
+        if (err) {
+          console.log('isExistSecKillInCart err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('isExistSecKillInCart result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
+        } else {
+          cb(null, {status: 1,  msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'isExistSecKillInCart',
+      {
+        description: [
+          '检查购物车内是否存在秒杀商品.返回结果-status:操作结果 0 失败 1 成功, freight:运费, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '购物车信息 {"userId":int, "cartIds":int array}',
+              'cartIds:购物车内条目的id(整型数组)'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/is-exist-secKill', verb: 'post'}
+      }
+    );
+
   });
 };

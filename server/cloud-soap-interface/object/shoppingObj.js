@@ -127,3 +127,23 @@ exports.getFreightXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.isExistSecKillInCartXML = function (obj) {
+  var xmlObj = [{
+    CartForCheckExistSecKill: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        uId: obj.userId
+      },
+      {
+        cartItemJson: obj.cartIds.join(',')
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};

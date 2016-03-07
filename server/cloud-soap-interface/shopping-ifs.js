@@ -90,3 +90,16 @@ ShoppingIFS.prototype.getFreight = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.isExistSecKillInCart = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.isExistSecKillInCartXML(obj);
+  Shopping.CartForCheckExistSecKill(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.CartForCheckExistSecKillResult));
+    } catch (e) {
+      console.error('ShoppingIFS isExistSecKillInCart Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};
