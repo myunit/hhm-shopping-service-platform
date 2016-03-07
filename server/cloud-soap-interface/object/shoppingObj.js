@@ -90,3 +90,40 @@ exports.deleteInCartXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.getCountInCartXML = function (obj) {
+  var xmlObj = [{
+    GetShoppingCartItemCountByCustomerSysNo: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        customerSysNo: obj.userId
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};
+
+exports.getFreightXML = function (obj) {
+  var xmlObj = [{
+    CalculateShippingFee: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        shippingmethod: obj.method
+      },
+      {
+        count: obj.count
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};

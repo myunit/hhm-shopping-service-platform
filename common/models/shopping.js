@@ -163,5 +163,80 @@ module.exports = function (Shopping) {
       }
     );
 
+    //获取购物车内的商品总数
+    Shopping.getCountInCart = function (data, cb) {
+      shoppingIFS.getCountInCart(data, function (err, res) {
+        if (err) {
+          console.log('getCountInCart err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('getCountInCart result err: ' + res.ErrorInfo);
+          cb(null, {status: 0, msg: res.ErrorInfo});
+        } else {
+          cb(null, {status: 1, count: parseInt(res.ResultStr), msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'getCountInCart',
+      {
+        description: [
+          '获取购物车内的商品总数.返回结果-status:操作结果 0 失败 1 成功, count:商品总数, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '获取购物车内的商品总数 {"userId":int}'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/get-count-in-cart', verb: 'post'}
+      }
+    );
+
+    //获取运费
+    Shopping.getFreight = function (data, cb) {
+      shoppingIFS.getFreight(data, function (err, res) {
+        if (err) {
+          console.log('getFreight err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('getFreight result err: ' + res.ErrorInfo);
+          cb(null, {status: 0, msg: res.ErrorInfo});
+        } else {
+          cb(null, {status: 1, freight: parseInt(res.ResultStr), msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'getFreight',
+      {
+        description: [
+          '获取运费.返回结果-status:操作结果 0 失败 1 成功, freight:运费, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '获取运费 {"method":int, "count":int}',
+              'method:运输方式(0自提 1快递 2物流)'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/get-freight', verb: 'post'}
+      }
+    );
+
   });
 };

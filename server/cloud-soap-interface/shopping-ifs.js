@@ -64,3 +64,29 @@ ShoppingIFS.prototype.deleteInCart = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.getCountInCart = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.getCountInCartXML(obj);
+  Shopping.GetShoppingCartItemCountByCustomerSysNo(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.GetShoppingCartItemCountByCustomerSysNoResult));
+    } catch (e) {
+      console.error('ShoppingIFS getCountInCart Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};
+
+ShoppingIFS.prototype.getFreight = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.getFreightXML(obj);
+  Shopping.CalculateShippingFee(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.CalculateShippingFeeResult));
+    } catch (e) {
+      console.error('ShoppingIFS getFreight Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};

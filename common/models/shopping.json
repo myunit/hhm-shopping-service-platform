@@ -41,6 +41,20 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "deleteInCart"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getCountInCart"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getFreight"
     }
   ],
   "methods": {}
