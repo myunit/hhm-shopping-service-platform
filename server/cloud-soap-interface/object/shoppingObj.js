@@ -172,3 +172,30 @@ exports.addSuggestionXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.submitOrderXML = function (obj) {
+  var order = {};
+  order.UId = obj.userId;
+  order.ReceiverId = obj.receiverId;
+  order.PayMent = obj.payMent;
+  order.Logistics = obj.logistics;
+  order.DeviceName = obj.device;
+
+  var xmlObj = [{
+    SubmitOrderByCartItemSysNo: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        orderdata: JSON.stringify(order)
+      },
+      {
+        cartItemJson: obj.cartIds.join()
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};

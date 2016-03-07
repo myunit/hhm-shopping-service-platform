@@ -314,5 +314,44 @@ module.exports = function (Shopping) {
       }
     );
 
+    //提交订单
+    Shopping.submitOrder = function (data, cb) {
+      shoppingIFS.submitOrder(data, function (err, res) {
+        if (err) {
+          console.log('submitOrder err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('submitOrder result err: ' + res.ErrorDescription);
+          cb(null, {status: 0, msg: res.ErrorDescription});
+        } else {
+          cb(null, {status: 1,  msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'submitOrder',
+      {
+        description: [
+          '提交订单.返回结果-status:操作结果 0 失败 1 成功, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '提交订单 {"userId":int, "receiverId":int, "logistics":"string", "payMent":int, "cartIds":int array, "device":"string"}',
+              'userId:用户编号, receiverId:收货地址编号, logistics:物流(快递 or 自提), message:留言, payMent:支付方式',
+              'device:设备编号'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/submit-order', verb: 'post'}
+      }
+    );
+
   });
 };

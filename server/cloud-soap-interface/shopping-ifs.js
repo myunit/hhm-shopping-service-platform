@@ -116,3 +116,16 @@ ShoppingIFS.prototype.addSuggestion = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.submitOrder = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.submitOrderXML(obj);
+  Shopping.SubmitOrderByCartItemSysNo(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.SubmitOrderByCartItemSysNoResult));
+    } catch (e) {
+      console.error('ShoppingIFS submitOrder Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};
