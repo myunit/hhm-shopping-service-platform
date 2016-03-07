@@ -103,3 +103,16 @@ ShoppingIFS.prototype.isExistSecKillInCart = function (obj, callback) {
     }
   });
 };
+
+ShoppingIFS.prototype.addSuggestion = function (obj, callback) {
+  var Shopping = this.DS.models.Shopping;
+  var xml = shoppingObj.addSuggestionXML(obj);
+  Shopping.AddSuggestion(xml, function (err, response) {
+    try {
+      callback(err, JSON.parse(response.AddSuggestionResult));
+    } catch (e) {
+      console.error('ShoppingIFS AddSuggestion Exception: ' + e);
+      callback(err, {IsSuccess: false, ErrorDescription:'服务异常'});
+    }
+  });
+};

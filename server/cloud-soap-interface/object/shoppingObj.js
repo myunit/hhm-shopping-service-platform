@@ -147,3 +147,28 @@ exports.isExistSecKillInCartXML = function (obj) {
 
   return xml(xmlObj, true);
 };
+
+exports.addSuggestionXML = function (obj) {
+  var suggest = {};
+  suggest.ContactWay = obj.contact;
+  suggest.CustomerSysNo = obj.userId;
+  suggest.SuggestionContent = obj.content;
+  suggest.SuggestionSysNo = 0;
+  var xmlObj = [{
+    AddSuggestion: [
+      {
+        _attr: {
+          xmlns: 'http://tempuri.org/'
+        }
+      },
+      {
+        customerSysNo: obj.userId
+      },
+      {
+        suggestJson: JSON.stringify(suggest)
+      }
+    ]
+  }];
+
+  return xml(xmlObj, true);
+};

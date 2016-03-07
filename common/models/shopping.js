@@ -260,7 +260,7 @@ module.exports = function (Shopping) {
       'isExistSecKillInCart',
       {
         description: [
-          '检查购物车内是否存在秒杀商品.返回结果-status:操作结果 0 失败 1 成功, freight:运费, msg:附带信息'
+          '检查购物车内是否存在秒杀商品.返回结果-status:操作结果 0 失败 1 成功, msg:附带信息'
         ],
         accepts: [
           {
@@ -273,6 +273,44 @@ module.exports = function (Shopping) {
         ],
         returns: {arg: 'repData', type: 'string'},
         http: {path: '/is-exist-secKill', verb: 'post'}
+      }
+    );
+
+    //添加投诉建议
+    Shopping.AddSuggestion = function (data, cb) {
+      shoppingIFS.addSuggestion(data, function (err, res) {
+        if (err) {
+          console.log('AddSuggestion err: ' + err);
+          cb(null, {status: 0, msg: '操作异常'});
+          return;
+        }
+
+        if (!res.IsSuccess) {
+          console.error('AddSuggestion result err: ' + res.ErrorInfo);
+          cb(null, {status: 0, msg: res.ErrorInfo});
+        } else {
+          cb(null, {status: 1,  msg: ''});
+        }
+      });
+    };
+
+    Shopping.remoteMethod(
+      'AddSuggestion',
+      {
+        description: [
+          '添加投诉建议.返回结果-status:操作结果 0 失败 1 成功, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '添加投诉建议 {"userId":int, "contact":"string", "content":"string"}',
+              'contact:联系方式, content:投诉建议内容'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/add-suggestion', verb: 'post'}
       }
     );
 
