@@ -8,4 +8,8 @@ module.exports = function (app) {
     console.log('Shopping interface is connected');
     app.datasources.ShoppingSoap.createModel('Shopping', {});
   });
+  app.datasources.MKTSoap.once('connected', function () {
+    console.log('MTK interface is connected');
+    app.datasources.MKTSoap.createModel('MKT', {});
+  });
 };

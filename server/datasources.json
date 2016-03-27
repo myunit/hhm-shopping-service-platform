@@ -15,5 +15,11 @@
     "name": "ShoppingSoap",
     "connector": "soap",
     "wsdl": "http://122.225.60.230:7008/PC_API/ShoppingService.svc?WSDL"
+  },
+  "MKTSoap": {
+    "url": "http://122.225.60.230:7008/PC_API/MKTService.svc",
+    "name": "MKTSoap",
+    "connector": "soap",
+    "wsdl": "http://122.225.60.230:7008/PC_API/MKTService.svc?WSDL"
   }
 }
