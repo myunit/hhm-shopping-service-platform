@@ -100,7 +100,7 @@ module.exports = function (Shopping) {
           console.error('modifyQtyInCart result err: ' + res.ErrorDescription);
           cb(null, {status: 0, msg: res.ErrorDescription});
         } else {
-          cb(null, {status: 1, msg: ''});
+          cb(null, {status: 1, promotion: res.PromotionAmount, msg: ''});
         }
       });
     };
