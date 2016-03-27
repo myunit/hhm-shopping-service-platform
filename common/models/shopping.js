@@ -4,12 +4,15 @@
  * @description
  */
 var loopback = require('loopback');
+var async = require('async');
 var ShoppingIFS = require('../../server/cloud-soap-interface/shopping-ifs');
+var MktIFS = require('../../server/cloud-soap-interface/mkt-ifs');
 
 module.exports = function (Shopping) {
   Shopping.getApp(function (err, app) {
 
     var shoppingIFS = new ShoppingIFS(app);
+    var mktIFS = new MktIFS(app);
 
     //获取购物车信息
     Shopping.getCartInfo = function (data, cb) {
@@ -350,6 +353,88 @@ module.exports = function (Shopping) {
         ],
         returns: {arg: 'repData', type: 'string'},
         http: {path: '/submit-order', verb: 'post'}
+      }
+    );
+
+    //获取用户优惠(包括新客优惠和客户等级优惠)
+    Shopping.getUserPromotion = function (data, callback) {
+      async.waterfall(
+        [
+          function (cb) {
+            mktIFS.getNewCustomerPromotion(data, function (err, res) {
+              if (err) {
+                console.log('getNewCustomerPromotion err: ' + err);
+                cb({status: 0, msg: '操作异常'});
+                return;
+              }
+
+              if (!res.IsSuccess) {
+                console.error('getNewCustomerPromotion result err: ' + res.ErrorInfo);
+                cb({status: 0, msg: res.ErrorInfo});
+              } else {
+                if (res.ResultStr.length > 0) {
+                  var result = JSON.parse(res.ResultStr);
+                  cb(null, result.Amount*100);
+                } else {
+                  cb(null, 0);
+                }
+
+              }
+            });
+          },
+          function (promotion, cb) {
+            mktIFS.getCustomerGroupPromotion(data, function (err, res) {
+              if (err) {
+                console.log('getCustomerGroupPromotion err: ' + err);
+                cb({status: 0, msg: '操作异常'});
+                return;
+              }
+
+              if (!res.IsSuccess) {
+                console.error('getCustomerGroupPromotion result err: ' + res.ErrorInfo);
+                cb({status: 0, msg: res.ErrorInfo});
+              } else {
+                if (res.ResultStr.length > 0) {
+                  var result = parseFloat(res.ResultStr);
+                  result = result*100;
+                  promotion += result;
+                  promotion = promotion/100;
+                  cb(null, {status: 1, promotion: promotion});
+                } else {
+                  cb(null, {status: 1, promotion: promotion});
+                }
+
+              }
+            });
+          }
+        ],
+        function (err, msg) {
+          if (err) {
+            callback(null, err);
+          } else {
+            callback(null, msg);
+          }
+        }
+      );
+    };
+
+    Shopping.remoteMethod(
+      'getUserPromotion',
+      {
+        description: [
+          '获取用户优惠(包括新客优惠和客户等级优惠).返回结果-status:操作结果 0 失败 1 成功, promotion:优惠金额, msg:附带信息'
+        ],
+        accepts: [
+          {
+            arg: 'data', type: 'object', required: true, http: {source: 'body'},
+            description: [
+              '获取用户优惠(包括新客优惠和客户等级优惠) {"userId":int, "cartIds":"string"}',
+              'cartIds：购物车id, [34126,34123]'
+            ]
+          }
+        ],
+        returns: {arg: 'repData', type: 'string'},
+        http: {path: '/get-user-promotion', verb: 'post'}
       }
     );
 
