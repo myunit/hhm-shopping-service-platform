@@ -374,7 +374,7 @@ module.exports = function (Shopping) {
               } else {
                 if (res.ResultStr.length > 0) {
                   var result = JSON.parse(res.ResultStr);
-                  cb(null, result.Amount*100);
+                  cb(null, result.Amount.toFixed(2)*100);
                 } else {
                   cb(null, 0);
                 }
@@ -383,6 +383,7 @@ module.exports = function (Shopping) {
             });
           },
           function (promotion, cb) {
+            console.log('promotion: ' + promotion);
             mktIFS.getCustomerGroupPromotion(data, function (err, res) {
               if (err) {
                 console.log('getCustomerGroupPromotion err: ' + err);
@@ -396,9 +397,12 @@ module.exports = function (Shopping) {
               } else {
                 if (res.ResultStr.length > 0) {
                   var result = parseFloat(res.ResultStr);
-                  result = result*100;
+                  result = result.toFixed(2)*100;
+                  console.log('result: ' + result);
                   promotion += result;
+                  console.log('promotion1: ' + promotion);
                   promotion = promotion/100;
+                  console.log('promotion2: ' + promotion);
                   cb(null, {status: 1, promotion: promotion});
                 } else {
                   cb(null, {status: 1, promotion: promotion});
