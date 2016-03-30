@@ -330,7 +330,7 @@ module.exports = function (Shopping) {
           console.error('submitOrder result err: ' + res.ErrorDescription);
           cb(null, {status: 0, msg: res.ErrorDescription});
         } else {
-          cb(null, {status: 1,  orderId: res.OrderId, msg: ''});
+          cb(null, {status: 1,  orderId: res.OrderId, order:res, msg: ''});
         }
       });
     };
@@ -383,7 +383,6 @@ module.exports = function (Shopping) {
             });
           },
           function (promotion, cb) {
-            console.log('promotion: ' + promotion);
             mktIFS.getCustomerGroupPromotion(data, function (err, res) {
               if (err) {
                 console.log('getCustomerGroupPromotion err: ' + err);
@@ -398,11 +397,8 @@ module.exports = function (Shopping) {
                 if (res.ResultStr.length > 0) {
                   var result = parseFloat(res.ResultStr);
                   result = result.toFixed(2)*100;
-                  console.log('result: ' + result);
                   promotion += result;
-                  console.log('promotion1: ' + promotion);
                   promotion = promotion/100;
-                  console.log('promotion2: ' + promotion);
                   cb(null, {status: 1, promotion: promotion});
                 } else {
                   cb(null, {status: 1, promotion: promotion});
