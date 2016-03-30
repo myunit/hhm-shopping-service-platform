@@ -330,7 +330,7 @@ module.exports = function (Shopping) {
           console.error('submitOrder result err: ' + res.ErrorDescription);
           cb(null, {status: 0, msg: res.ErrorDescription});
         } else {
-          cb(null, {status: 1,  orderId: res.OrderId, msg: ''});
+          cb(null, {status: 1,  orderId: res.OrderId, order:res, msg: ''});
         }
       });
     };
